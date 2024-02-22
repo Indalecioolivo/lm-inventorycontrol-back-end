@@ -21,7 +21,7 @@ export class ProductsService {
   }
 
   async findAll() {
-    return this.prisma.product.findMany();
+    return await this.prisma.product.findMany();
   }
 
   async findOne(barcode: string): Promise<CreateProductDto> | null {
