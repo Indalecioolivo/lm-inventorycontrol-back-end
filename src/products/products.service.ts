@@ -7,14 +7,29 @@ import { PrismaService } from 'src/database/prisma.service';
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
   async create(data: CreateProductDto): Promise<CreateProductDto> {
+    function verifyProduct(data: CreateProductDto) {
+      const regexNumbers = /^\d+$/;
+
+      if (data.bar_code.length != 13 || !regexNumbers.test(data.bar_code)) {
+        throw new Error('Código de Barras Inválido');
+      }
+
+      if (data.name.length === 0) {
+        throw new Error('Insira o nome do Produto.');
+      }
+    }
+
+    verifyProduct(data);
+
     const exist = await this.prisma.product.findUnique({
       where: {
         bar_code: data.bar_code,
       },
     });
     if (exist) {
-      throw new Error('This Product Already Exists');
+      throw new Error('Produto já cadastrado');
     }
+
     return await this.prisma.product.create({
       data: { ...data },
     });
