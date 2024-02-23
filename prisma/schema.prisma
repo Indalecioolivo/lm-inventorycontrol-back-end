@@ -22,5 +22,6 @@ model Product{
   description String?
   volume Int
   stock Int
+  price Int
   @@map("Products")
 }
